@@ -2,15 +2,19 @@ import os
 import tensorflow as tf
 from prepro_msm import prepro
 from main import train, test
+
 flags = tf.flags
+
 home = os.path.expanduser("~")
 
-train_file = os.path.join(home, "data", "msmarco", "train_v2.1.json")
-dev_file = os.path.join(home, "data", "msmarco", "dev_v2.1.json")
-test_file = os.path.join(home, "data", "msmarco", "dev_v2.1.json")
+train_file = os.path.join(home, "data", "msmarco", "train_v1.1.json")
+dev_file = os.path.join(home, "data", "msmarco", "dev_v1.1.json")
+test_file = os.path.join(home, "data", "msmarco", "dev_v1.1.json")
 glove_file = os.path.join(home, "data", "glove", "glove.840B.300d.txt")
+
 flags.DEFINE_string("run_id", "0", "RUN ID[0]")
 flags.DEFINE_string("model_name", "basic", "model name")
+
 target_dir = "data"
 log_dir = os.path.join(flags.FLAGS.model_name, flags.FLAGS.run_id, "event")
 save_dir = os.path.join(flags.FLAGS.model_name, flags.FLAGS.run_id, "save")
@@ -107,6 +111,8 @@ flags.DEFINE_integer("hidden", 75, "Hidden size")  # 75
 flags.DEFINE_integer("char_hidden", 100, "GRU dimention for char")
 flags.DEFINE_integer("patience", 3, "Patience for learning rate decay")
 flags.DEFINE_integer("max_to_keep", 10, "max numbers of saved model")
+flags.DEFINE_float("ratio", 0.8, "ratio for weight loss")
+
 
 def main(_):
     config = flags.FLAGS

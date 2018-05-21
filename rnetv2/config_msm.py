@@ -7,9 +7,9 @@ flags = tf.flags
 
 home = os.path.expanduser("~")
 
-train_file = os.path.join(home, "data", "msmarco", "train_v2.1.json")
-dev_file = os.path.join(home, "data", "msmarco", "dev_v2.1.json")
-test_file = os.path.join(home, "data", "msmarco", "dev_v2.1.json")
+train_file = os.path.join(home, "data", "msmarco", "train_v1.1.json")
+dev_file = os.path.join(home, "data", "msmarco", "dev_v1.1.json")
+test_file = os.path.join(home, "data", "msmarco", "dev_v1.1.json")
 glove_file = os.path.join(home, "data", "glove", "glove.840B.300d.txt")
 
 flags.DEFINE_string("run_id", "0", "RUN ID[0]")

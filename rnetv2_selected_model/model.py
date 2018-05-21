@@ -1,13 +1,12 @@
 import tensorflow as tf
-from func import cudnn_gru, native_gru, dot_attention, summ, dropout, ptr_net
-
+from func import cudnn_gru, native_gru, dot_attention, summ, dropout, ptr_net, dense, attention_pooling
 
 class Model(object):
     def __init__(self, config, batch, word_mat=None, char_mat=None, trainable=True, opt=True):
         self.config = config
         self.global_step = tf.get_variable('global_step', shape=[], dtype=tf.int32,
                                            initializer=tf.constant_initializer(0), trainable=False)
-        self.c, self.q, self.ch, self.qh, self.y1, self.y2, self.qa_id = batch.get_next()
+        self.c, self.q, self.ch, self.qh, self.y1, self.y2, self.s, self.qa_id = batch.get_next()
         self.is_train = tf.get_variable(
             "is_train", shape=[], dtype=tf.bool, trainable=False)
         self.word_mat = tf.get_variable("word_mat", initializer=tf.constant(
@@ -128,8 +127,22 @@ class Model(object):
                 logits=logits2, labels=self.y2)
             self.loss = tf.reduce_mean(losses + losses2)
 
+        # document selected
+        with tf.variable_scope("select"):
+            # batch_size dim
+            c_cum = attention_pooling(match, init, self.c_mask, hidden=d)
+            fuse = tf.concat([c_cum, init], axis=1)
+            fuse = dense(fuse, hidden=d, use_bias=False, scope="fully1")
+            fuse = dense(fuse, hidden=1, use_bias=False, scope="fully2")
+            # batch_size 1
+            self.logits_s = tf.sigmoid(fuse)
+            fuse = tf.squeeze(fuse)
+            self.loss_s = tf.nn.sigmoid_cross_entropy_with_logits(logits=fuse, labels=self.s)
+
     def get_loss(self):
-        return self.loss
+        ratio = self.config.ratio
+        self.all_loss = ratio * self.loss + (1 - ratio) * self.loss_s
+        return self.all_loss
 
     def get_global_step(self):
         return self.global_step

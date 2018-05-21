@@ -4,6 +4,7 @@ from prepro_msm import prepro
 from main import train, test
 
 flags = tf.flags
+
 home = os.path.expanduser("~")
 
 train_file = os.path.join(home, "data", "msmarco", "train_v1.1.json")
@@ -94,7 +95,7 @@ flags.DEFINE_boolean("use_cudnn", True, "Whether to use cudnn rnn (should be Fal
 flags.DEFINE_boolean("is_bucket", True, "build bucket batch iterator or not")
 flags.DEFINE_integer("bucket_range", [40, 401, 40], "the range of bucket")
 
-flags.DEFINE_integer("batch_size", 16, "Batch size")
+flags.DEFINE_integer("batch_size", 64, "Batch size")
 flags.DEFINE_integer("num_steps", 50000, "Number of steps")
 flags.DEFINE_integer("checkpoint", 1000,
                      "checkpoint to save and evaluate the model")

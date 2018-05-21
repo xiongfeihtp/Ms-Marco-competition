@@ -8,11 +8,9 @@ import numpy as np
 
 nlp = spacy.blank("en")
 
-
 def word_tokenize(sent):
     doc = nlp(sent)
     return [token.text for token in doc]
-
 
 def convert_idx(text, tokens):
     current = 0
@@ -26,19 +24,14 @@ def convert_idx(text, tokens):
         current += len(token)
     return spans
 
-
 # Dynamic programming implementation of LCS problem
-
-# Returns length of LCS for X[0..m-1], Y[0..n-1] 
-
+# Returns length of LCS for X[0..m-1], Y[0..n-1]
 # Driver program
 """
 X = "AGGTAB"
 Y = "GXTXAYB"
 lcs(X, Y)
 """
-
-
 def lcs(X, Y):
     m = len(X)
     n = len(Y)
@@ -99,7 +92,6 @@ def _lcs(X, Y, m, n):
     # if answer_start == answer_end:
     #   answer_end += 1
     return answer_start, answer_end + 1
-
 
 def process_file(filename, data_type, word_counter, char_counter):
     print("Generating {} examples...".format(data_type))

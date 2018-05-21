@@ -29,7 +29,7 @@ def convert_idx(text, tokens):
 
 # Dynamic programming implementation of LCS problem
 
-# Returns length of LCS for X[0..m-1], Y[0..n-1]
+# Returns length of LCS for X[0..m-1], Y[0..n-1] 
 
 # Driver program
 """
@@ -146,6 +146,7 @@ def process_file(filename, data_type, word_counter, char_counter):
         answer_start, answer_end = lcs(passage_concat.lower(), answer_text.lower())
         answer_span = []
         temp_span = []
+
         # word index for answer span
         for idx, span in enumerate(spans):
             # if not (answer_end <= span[0] or answer_start >= span[1]):
@@ -164,8 +165,6 @@ def process_file(filename, data_type, word_counter, char_counter):
         y1s.append(y1)
         y2s.append(y2)
         total += 1
-        if not (total % 10):
-            print(total)
         example = {"passage_tokens": passage_tokens, "passage_chars": passage_chars, "ques_tokens": ques_tokens,
                    "ques_chars": ques_chars, "y1s": y1s, "y2s": y2s, "id": total}
         examples.append(example)

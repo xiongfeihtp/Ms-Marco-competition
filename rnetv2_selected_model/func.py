@@ -194,6 +194,21 @@ def dot_attention(inputs, memory, mask, hidden, keep_prob=1.0, is_train=None, sc
             gate = tf.nn.sigmoid(dense(d_res, dim, use_bias=False))
             return res * gate
 
+def attention_pooling(inputs, memory, mask, hidden, scope="pool_attention"):
+    with tf.variable_scope(scope):
+        JX = tf.shape(inputs)[1]
+        # batch_size len_c dim
+        memory = tf.tile(tf.expand_dims(memory, axis=1), [1, JX, 1])
+        with tf.variable_scope("attention"):
+            # concat
+            u = tf.concat([tf.tile(tf.expand_dims(memory, axis=1), [1, JX, 1]), inputs], axis=2)
+            s0 = tf.nn.tanh(dense(u, hidden, use_bias=False, scope='s0'))
+            s = dense(s0, 1, use_bias=False, scope='s')
+            s1 = softmax_mask(tf.squeeze(s, [2]), mask)
+            a = tf.expand_dims(tf.nn.softmax(s1), axis=2)
+            res = tf.reduce_sum(a * inputs, axis=1)
+            return res
+
 def dense(inputs, hidden, use_bias=True, scope="dense"):
     with tf.variable_scope(scope):
         shape = tf.shape(inputs)

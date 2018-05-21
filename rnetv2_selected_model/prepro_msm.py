@@ -294,7 +294,6 @@ def build_features(config, examples, data_type, out_file, word2idx_dict, char2id
 
         start, end = example["y1s"][-1], example["y2s"][-1]
         y1[start], y2[end] = 1.0, 1.0
-
         record = tf.train.Example(features=tf.train.Features(feature={
             "passage_idxs": tf.train.Feature(bytes_list=tf.train.BytesList(value=[passage_idxs.tostring()])),
             "ques_idxs": tf.train.Feature(bytes_list=tf.train.BytesList(value=[ques_idxs.tostring()])),
@@ -312,13 +311,11 @@ def build_features(config, examples, data_type, out_file, word2idx_dict, char2id
     writer.close()
     return meta
 
-
 def save(filename, obj, message=None):
     if message is not None:
         print("Saving {}...".format(message))
         with open(filename, "w") as fh:
             json.dump(obj, fh)
-
 
 def prepro(config):
     word_counter, char_counter = Counter(), Counter()
